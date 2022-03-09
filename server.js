@@ -63,12 +63,29 @@ app.get('/fruits', (req, res) => {
         // then render a template AFTER they're found
         .then(fruits => {
             console.log(fruits)
-            res.render('./views/fruits/index.liquid', { fruits })
+            res.render('fruits/index.liquid', { fruits })
         })
         // show an error if there is one
         .catch(error => {
             console.log(error)
             res.json({ error })
+        })
+})
+
+// show route
+app.get('/fruits/:id', (req,res) => {
+    // first, we need to the id
+    const fruitId = req.params.id
+    // then we can find a fruit by it's id
+    Fruit.findById(fruitId)
+    // once found, we can render a view with the data
+        .then(fruit => {
+            res.render('fruits/show.liquid', {fruit})
+        })
+    // if there is an error, show that instead
+        .catch(err => {
+            console.log(err)
+            res.json({ err })
         })
 })
 

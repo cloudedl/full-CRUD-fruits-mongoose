@@ -1,0 +1,16 @@
+{% layout 'layout.liquid' %}
+{% block content %}
+    <div>
+        <article style="background-color:{{fruit.color}}">
+            <h2>
+                {{ fruit.name }} -
+                {% if fruit.readyToEat %}
+                    Ready to Eat
+                {% else %}    
+                    Not ready to Eat
+                {% endif %}
+            </h2>
+            <h3>{{fruit.color}}</h3>
+        </article>
+    </div>
+{% endblock %}
