@@ -97,6 +97,42 @@ app.post('/fruits', (req,res) => {
         })
 })
 
+//EDIT ROUTE
+app.get('/fruits/:id/edit', (req,res) => {
+    // we need to get the Id
+    const fruitId = req.params.id
+    //find the fruit
+    Fruit.findById(fruitId)
+    //--render if there is a fruit
+        .then(fruit => {
+            res.render('fruits/edit.liquid', {fruit})
+        })
+    // error if no fruit
+        .catch(err => {
+            console.log(err)
+            res.json(err)
+        })
+})
+// UPDATE ROUTE
+app.put('/fruits/:id', (req,res) => {
+    //get the id
+    const fruitId = req.params.id
+    //check and assign ready to eat property with correct value
+    req.body.readyToEat = req.body.readyToEat === 'on' ? true : false
+
+    //tell mongoose to update the fruit
+    Fruit.findByIdAndUpdate(fruitId, req.body, {new: true})
+        .then(fruit => {
+            console.log('the updated fruit', fruit)
+            res.redirect(`/fruits/${fruit.id}`)
+        })
+          // error if no fruit
+          .catch(err => {
+            console.log(err)
+            res.json(err)
+        })
+})
+
 // SHOW ROUTE
 app.get('/fruits/:id', (req,res) => {
     // first, we need to the id
@@ -114,6 +150,23 @@ app.get('/fruits/:id', (req,res) => {
         })
 })
 
+
+//DELETE ROUTE
+app.delete('/fruits/:id', (req,res) => {
+    //get fruit id
+    const fruitId =req.params.id
+    // delete the fruit
+    Fruit.findByIdAndRemove(fruitId)
+        .then(fruit => {
+            console.log('this is the response from FBID', fruit)
+            res.redirect('/fruits')
+        })
+        .catch(err => {
+            console.log(err)
+            res.json({ err })
+        })
+
+})
 
 
 ////////////////////////////////////////////
