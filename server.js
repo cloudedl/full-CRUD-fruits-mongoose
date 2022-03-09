@@ -7,6 +7,7 @@ const express = require('express')
 const morgan = require('morgan')
 const methodOverride = require('method-override')
 const Fruit = require('./models/fruit')
+const mongoose = require('./models/connection')
 
 ////////////////////////////////////////////
 // Create our express application object
@@ -29,6 +30,31 @@ app.use(express.static('public'))
 ////////////////////////////////////////////
 app.get('/', (req, res) => {
     res.send('your server is running, better go catch it')
+})
+
+app.get('/fruits/seed', (req,res) => {
+    //arr of starter fruit
+    const startFruits = [
+        { name: "Orange", color: "orange", readyToEat: false },
+        { name: "Grape", color: "purple", readyToEat: false },
+        { name: "Banana", color: "orange", readyToEat: false },
+        { name: "Strawberry", color: "red", readyToEat: false },
+        { name: "Coconut", color: "brown", readyToEat: false },
+    ];
+
+    //when we seed data, there are a few steps invovled
+    //delete all the data that already exists(will only happepn if data exists)
+    Fruit.remove({})
+        .then(data => {
+            console.log('this is what remove returns', data)
+        })
+        //then we create with our seed data
+        Fruit.create(startFruits)
+            .then(data => {
+                console.log('this is what create returns', data)
+                res.send(data)
+            })
+    //then we can send if we want to see that data
 })
 
 ////////////////////////////////////////////
