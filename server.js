@@ -56,7 +56,7 @@ app.get('/fruits/seed', (req, res) => {
     // then we can send if we want to see that data
 })
 
-// index route
+// INDEX ROUTE
 app.get('/fruits', (req, res) => {
     // find the fruits
     Fruit.find({})
@@ -72,7 +72,32 @@ app.get('/fruits', (req, res) => {
         })
 })
 
-// show route
+// new route -> GET route that renders our page with the form
+app.get('/fruits/new', (req, res) => {
+    res.render('fruits/new')
+})
+
+//CREATE ROUTE -> POST route that actually calls the db and makes a new document
+app.post('/fruits', (req,res) => {
+    console.log('this is the fruit to create', req.body)
+
+    //check and set readyToEat into one line of code
+    req.body.readyToEat = req.body.readyToEat === 'on' ? true : false
+    console.log
+   
+    //now we're ready for mongoose to do its thing
+    Fruit.create(req.body)
+        .then(data => {
+            console.log('this was returned from create', data)
+            res.redirect('/fruits')
+        })
+        .catch(err => {
+            console.log(err)
+            res.json(err)
+        })
+})
+
+// SHOW ROUTE
 app.get('/fruits/:id', (req,res) => {
     // first, we need to the id
     const fruitId = req.params.id
@@ -88,6 +113,8 @@ app.get('/fruits/:id', (req,res) => {
             res.json({ err })
         })
 })
+
+
 
 ////////////////////////////////////////////
 // Server Listener
