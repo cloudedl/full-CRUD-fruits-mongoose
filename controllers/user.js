@@ -1,14 +1,14 @@
 ////////////////////////////////////////
 // Import Dependencies
 ////////////////////////////////////////
-const express = require("express");
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
+const express = require("express")
+const User = require("../models/user")
+const bcrypt = require("bcryptjs")
 
 /////////////////////////////////////////
 // Create Route
 /////////////////////////////////////////
-const router = express.Router();
+const router = express.Router()
 
 /////////////////////////////////////////
 // Routes
@@ -16,21 +16,34 @@ const router = express.Router();
 
 // The Signup Routes (Get => form, post => submit form)
 router.get("/signup", (req, res) => {
-  res.render("user/signup.liquid");
-});
+  res.render("users/signup.liquid")
+})
 
-router.post("/signup", (req, res) => {
-  res.send("signup");
-});
+router.post("/signup", async (req, res) => {
+ //encrypt our password
+  req.body.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10))
+  // create the new user
+  User.create(req.body)
+    .then((user) => {
+      // redirect to login page
+      res.redirect("/users/login")
+    })
+    .catch((error) => {
+      // send error as json
+      console.log(error)
+      res.json({ error })
+    })
+})
+})
 
 // The login Routes (Get => form, post => submit form)
 router.get("/login", (req, res) => {
-  res.render("user/login.liquid");
-});
+  res.render("users/login.liquid")
+})
 
 router.post("/login", (req, res) => {
-  res.send("login");
-});
+  res.send("login")
+})
 
 
 // Signout Route 
@@ -38,4 +51,4 @@ router.post("/login", (req, res) => {
 //////////////////////////////////////////
 // Export the Router
 //////////////////////////////////////////
-module.exports = router;
+module.exports = router
