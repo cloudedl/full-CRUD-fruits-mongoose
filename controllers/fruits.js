@@ -14,31 +14,6 @@ const router = express.Router()
 // Routes
 ////////////////////////////////////////////
 
-router.get('/seed', (req, res) => {
-    // arr of starter fruits
-    const startFruits = [
-        { name: 'Orange', color: 'orange', readyToEat: false },
-        { name: 'Grape', color: 'purple', readyToEat: false },
-        { name: 'Banana', color: 'orange', readyToEat: false },
-        { name: 'Strawberry', color: 'red', readyToEat: false },
-        { name: 'Coconut', color: 'brown', readyToEat: false }
-	]
-
-    // when we seed data, there are a few steps involved
-    // delete all the data that already exists(will only happen if data exists)
-    Fruit.remove({})
-        .then(data => {
-            console.log('this is what remove returns', data)
-            // then we create with our seed data
-            Fruit.create(startFruits)
-                .then(data => {
-                    console.log('this is what create returns', data)
-                    res.send(data)
-                })
-        })
-    // then we can send if we want to see that data
-})
-
 // INDEX ROUTE
 router.get('/', (req, res) => {
     // find the fruits
@@ -55,7 +30,7 @@ router.get('/', (req, res) => {
         })
 })
 
-// new route -> GET route that renders our page with the form
+// NEW ROUTE -> GET route that renders our page with the form
 router.get('/new', (req, res) => {
     res.render('fruits/new')
 })
