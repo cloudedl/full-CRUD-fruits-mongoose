@@ -9,6 +9,7 @@ const methodOverride = require('method-override')
 
 //now that we are using controllers we need to require our Router
 const FruitRouter = require('./controllers/fruits')
+const UserRouter = require('./controllers/user')
 
 ////////////////////////////////////////////
 // Create our express application object
@@ -32,6 +33,8 @@ app.use(express.static('public'))
 
 //send all '/fruits' routes to the FruitRouter
 app.use('/fruits', FruitRouter)
+
+app.use('/user', UserRouter)
 
 app.get('/', (req, res) => {
     res.send('your server is running, better go catch it')
