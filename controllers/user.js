@@ -85,6 +85,14 @@ router.post("/login", async (req, res) => {
 
 // Signout Route 
 
+router.get('/logout', (req,res) => {
+    //destroy session and redirect to main page
+    req.session.destroy(err => {
+        console.log('this is err in logout',err)
+        res.redirect('/')
+    })
+})
+
 //////////////////////////////////////////
 // Export the Router
 //////////////////////////////////////////

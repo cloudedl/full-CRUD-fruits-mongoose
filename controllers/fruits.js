@@ -10,11 +10,21 @@ const Fruit = require('../models/fruit')
 const router = express.Router()
 
 
+// Authorization middleware
+router.use((req, res, next) => {
+    if (req.session.loggedIn) {
+        //if they're logged in, go to the next thing(thats the controller)
+        next()
+    } else {
+        //if they aren't logged in
+        res.redirect('/user/login')
+    }
+})
 ////////////////////////////////////////////
 // Routes
 ////////////////////////////////////////////
 
-// INDEX ROUTE
+// INDEX ALL FRUITS ROUTE
 router.get('/', (req, res) => {
     // find the fruits
     Fruit.find({})
@@ -30,6 +40,24 @@ router.get('/', (req, res) => {
         })
 })
 
+//index that shows only the user's fruits
+router.get('/mine', (req, res) => {
+    // find the fruits
+    Fruit.find({username: req.session.username})
+        // then render a template AFTER they're found
+        .then(fruits => {
+            console.log(fruits)
+            res.render('fruits/index.liquid', { fruits })
+        })
+        // show an error if there is one
+        .catch(error => {
+            console.log(error)
+            res.json({ error })
+        })
+})
+
+
+
 // NEW ROUTE -> GET route that renders our page with the form
 router.get('/new', (req, res) => {
     res.render('fruits/new')
@@ -43,6 +71,7 @@ router.post('/', (req,res) => {
     req.body.readyToEat = req.body.readyToEat === 'on' ? true : false
     console.log
    
+    req.body.username = req.session.username
     //now we're ready for mongoose to do its thing
     Fruit.create(req.body)
         .then(data => {
@@ -54,6 +83,7 @@ router.post('/', (req,res) => {
             res.json(err)
         })
 })
+
 
 //EDIT ROUTE
 router.get('/:id/edit', (req,res) => {
